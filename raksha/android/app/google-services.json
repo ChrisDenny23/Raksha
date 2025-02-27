@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "720412339707",
+    "project_id": "hackathon-f1138",
+    "storage_bucket": "hackathon-f1138.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:720412339707:android:99ed50cddd887229782f5e",
+        "android_client_info": {
+          "package_name": "com.example.raksha"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYKc2QCpHNvzXLhFehYuMmquqhM9YfvX8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
