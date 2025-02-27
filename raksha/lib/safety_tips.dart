@@ -45,14 +45,20 @@ class VideoListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Safety Tips'),
-        backgroundColor: theme.secondaryHeaderColor,
-        foregroundColor: theme.brightness == Brightness.dark
-            ? Colors.white
-            : theme.primaryColor,
+        title: Text(
+          'Safety Tips',
+          style: TextStyle(
+            fontFamily: 'Poppy',
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        backgroundColor: isDark ? Colors.black : Colors.white,
+        foregroundColor: isDark ? Colors.white : theme.primaryColor,
+        elevation: 0,
       ),
       body: ListView.builder(
         itemCount: videos.length,
@@ -84,11 +90,15 @@ class VideoThumbnailCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final primaryColor = const Color(0xFF2196F3); // AppThemes.primaryBlue
 
     return Card(
       margin: EdgeInsets.all(10),
-      elevation: 4,
+      elevation: 2,
       color: isDark ? theme.cardColor : Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
       child: InkWell(
         onTap: () {
           Navigator.push(
@@ -101,6 +111,7 @@ class VideoThumbnailCard extends StatelessWidget {
             ),
           );
         },
+        borderRadius: BorderRadius.circular(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -108,10 +119,16 @@ class VideoThumbnailCard extends StatelessWidget {
             Stack(
               alignment: Alignment.center,
               children: [
-                SizedBox(
-                  height: 160,
-                  width: double.infinity,
-                  child: _buildThumbnail(),
+                ClipRRect(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(12),
+                    topRight: Radius.circular(12),
+                  ),
+                  child: SizedBox(
+                    height: 160,
+                    width: double.infinity,
+                    child: _buildThumbnail(),
+                  ),
                 ),
                 Icon(
                   Icons.play_circle_filled,
@@ -125,15 +142,19 @@ class VideoThumbnailCard extends StatelessWidget {
               padding: const EdgeInsets.all(12.0),
               child: Row(
                 children: [
-                  Icon(Icons.play_circle_filled,
-                      size: 24, color: theme.primaryColor),
+                  Icon(
+                    Icons.play_circle_filled,
+                    size: 24,
+                    color: primaryColor,
+                  ),
                   SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       title,
                       style: TextStyle(
+                        fontFamily: 'Poppy',
                         fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                         color: theme.textTheme.bodyLarge?.color,
                       ),
                     ),
@@ -183,6 +204,7 @@ class VideoThumbnailCard extends StatelessWidget {
               child: Text(
                 title,
                 style: TextStyle(
+                  fontFamily: 'Poppy',
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
@@ -313,7 +335,10 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to load video: $e'),
+            content: Text(
+              'Failed to load video: $e',
+              style: TextStyle(fontFamily: 'PoppyLight'),
+            ),
             duration: Duration(seconds: 5),
           ),
         );
@@ -344,18 +369,24 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     final backgroundColor =
         isDark ? Colors.black : theme.scaffoldBackgroundColor;
     final textColor = isDark ? Colors.white : theme.textTheme.bodyLarge?.color;
-    final accentColor = theme.primaryColor;
+    final primaryColor = const Color(0xFF2196F3); // AppThemes.primaryBlue
 
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: Text(widget.title),
-        backgroundColor: isDark ? Colors.black : theme.secondaryHeaderColor,
-        foregroundColor: isDark ? Colors.white : theme.primaryColor,
+        title: Text(
+          widget.title,
+          style: TextStyle(
+            fontFamily: 'Poppy',
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        backgroundColor: isDark ? Colors.black : Colors.white,
+        foregroundColor: isDark ? Colors.white : primaryColor,
         elevation: 0,
       ),
       body: SafeArea(
-        child: _buildContent(theme, textColor, accentColor),
+        child: _buildContent(theme, textColor, primaryColor),
       ),
     );
   }
@@ -370,12 +401,18 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
             SizedBox(height: 16),
             Text(
               'Loading video...',
-              style: TextStyle(color: textColor?.withOpacity(0.7)),
+              style: TextStyle(
+                fontFamily: 'PoppyLight',
+                color: textColor?.withOpacity(0.7),
+              ),
             ),
             Text(
               widget.videoPath,
-              style:
-                  TextStyle(color: textColor?.withOpacity(0.5), fontSize: 12),
+              style: TextStyle(
+                fontFamily: 'PoppyLight',
+                color: textColor?.withOpacity(0.5),
+                fontSize: 12,
+              ),
             ),
           ],
         ),
@@ -391,23 +428,36 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
             SizedBox(height: 16),
             Text(
               'Failed to load video',
-              style: TextStyle(color: textColor, fontSize: 18),
+              style: TextStyle(
+                fontFamily: 'Poppy',
+                color: textColor,
+                fontSize: 18,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text(
                 _errorMessage,
-                style:
-                    TextStyle(color: textColor?.withOpacity(0.7), fontSize: 14),
+                style: TextStyle(
+                  fontFamily: 'PoppyLight',
+                  color: textColor?.withOpacity(0.7),
+                  fontSize: 14,
+                ),
                 textAlign: TextAlign.center,
               ),
             ),
             SizedBox(height: 8),
             ElevatedButton(
               onPressed: _initializeVideoPlayer,
-              child: Text('Retry'),
+              child: Text(
+                'Retry',
+                style: TextStyle(fontFamily: 'Poppy'),
+              ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: accentColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
             ),
             SizedBox(height: 16),
@@ -415,10 +465,19 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('Go Back', style: TextStyle(color: textColor)),
+              child: Text(
+                'Go Back',
+                style: TextStyle(
+                  fontFamily: 'Poppy',
+                  color: textColor,
+                ),
+              ),
               style: OutlinedButton.styleFrom(
                 side: BorderSide(
                     color: textColor?.withOpacity(0.7) ?? Colors.grey),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
             ),
           ],
@@ -458,7 +517,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                   max: _totalDuration > 0 ? _totalDuration : 1,
                   activeColor: accentColor,
                   inactiveColor: theme.brightness == Brightness.dark
-                      ? Colors.grey
+                      ? Colors.grey.shade800
                       : Colors.grey.shade300,
                   onChanged: (value) {
                     setState(() {
@@ -475,11 +534,17 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                     children: [
                       Text(
                         _formatDuration(_controller.value.position),
-                        style: TextStyle(color: textColor?.withOpacity(0.7)),
+                        style: TextStyle(
+                          fontFamily: 'PoppyLight',
+                          color: textColor?.withOpacity(0.7),
+                        ),
                       ),
                       Text(
                         _formatDuration(_controller.value.duration),
-                        style: TextStyle(color: textColor?.withOpacity(0.7)),
+                        style: TextStyle(
+                          fontFamily: 'PoppyLight',
+                          color: textColor?.withOpacity(0.7),
+                        ),
                       ),
                     ],
                   ),
