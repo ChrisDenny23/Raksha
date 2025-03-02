@@ -373,7 +373,10 @@ class _WeatherPageState extends State<WeatherPage>
       data: theme,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Live Weather'),
+          title: const Text(
+            'Live Weather',
+            style: TextStyle(fontFamily: 'poppy'),
+          ),
           elevation: 0,
           actions: [
             IconButton(

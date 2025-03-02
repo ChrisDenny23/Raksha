@@ -11,11 +11,13 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:raksha/do_dont.dart';
 import 'package:raksha/emergency_contacts.dart';
 import 'package:raksha/helpline.dart';
+import 'package:raksha/incident_report.dart';
 import 'package:raksha/location.dart';
 import 'package:raksha/news_section.dart';
 import 'package:raksha/risk_level_indicator.dart';
 import 'package:raksha/safety_tips.dart';
 import 'package:raksha/settings.dart';
+import 'package:raksha/volunteer.dart';
 import 'package:raksha/weather.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -35,7 +37,6 @@ class _HomepageState extends State<HomePage> {
   Position? _currentPosition;
   int _currentIndex = 1;
   String _username = '';
-  String? _profilePicturePath;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -44,7 +45,6 @@ class _HomepageState extends State<HomePage> {
     super.initState();
     _initializeLocation();
     _fetchUsername();
-    _loadProfilePicture();
   }
 
   Future<void> _fetchUsername() async {
@@ -72,24 +72,8 @@ class _HomepageState extends State<HomePage> {
     }
   }
 
-  Future<void> _loadProfilePicture() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final imagePath = prefs.getString('profile_picture_path');
-
-      if (mounted) {
-        setState(() {
-          _profilePicturePath = imagePath;
-        });
-      }
-    } catch (e) {
-      print('Error loading profile picture: $e');
-    }
-  }
-
   Future<void> refreshUserData() async {
     await _fetchUsername();
-    await _loadProfilePicture();
   }
 
   Future<void> _initializeLocation() async {
@@ -99,7 +83,7 @@ class _HomepageState extends State<HomePage> {
 
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
-        timeLimit: const Duration(seconds: 5),
+        timeLimit: const Duration(seconds: 10),
       );
 
       if (!mounted) return;
@@ -409,86 +393,98 @@ class _HomepageState extends State<HomePage> {
   Widget _buildQuickAccess() {
     final theme = Theme.of(context);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Quick Access",
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: theme.primaryColor,
-            fontFamily: 'poppy',
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(
+        "Quick Access",
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: theme.primaryColor,
+          fontFamily: 'poppy',
+        ),
+      ),
+      const SizedBox(height: 10),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildQuickAccessButton(
+            icon: Icons.warning,
+            label: "Safety tips",
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => VideoListScreen()),
+              );
+            },
           ),
-        ),
-        const SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            _buildQuickAccessButton(
-              icon: Icons.warning,
-              label: "Safety tips",
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => VideoListScreen()),
-                );
-              },
-            ),
-            _buildQuickAccessButton(
-              icon: Icons.help,
-              label: "Helpline",
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HelplinePage()),
-                );
-              },
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            _buildQuickAccessButton(
-              icon: Icons.check_box,
-              label: "Do's and Dont's",
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => DisasterScreen()),
-                );
-              },
-            ),
-            _buildQuickAccessButton(
-              icon: Icons.cloud,
-              label: "Live weather",
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => WeatherPage()),
-                );
-              },
-            ),
-          ],
-        ),
-      ],
-    );
+          _buildQuickAccessButton(
+            icon: Icons.help,
+            label: "Helpline",
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HelplinePage()),
+              );
+            },
+          ),
+        ],
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildQuickAccessButton(
+            icon: Icons.check_box,
+            label: "Do's and Dont's",
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => DisasterScreen()),
+              );
+            },
+          ),
+          _buildQuickAccessButton(
+            icon: Icons.cloud,
+            label: "Live weather",
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => WeatherPage()),
+              );
+            },
+          ),
+        ],
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildQuickAccessButton(
+            icon: Icons.report,
+            label: "Report Incident",
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const IncidentReportPage()),
+              );
+            },
+          ),
+          _buildQuickAccessButton(
+            icon: Icons.volunteer_activism,
+            label: "Volunteer",
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => VolunteerPage()),
+              );
+            },
+          ),
+        ],
+      ),
+    ]);
   }
 
   Widget _buildProfileAvatar() {
-    if (_profilePicturePath != null) {
-      final file = File(_profilePicturePath!);
-      if (file.existsSync()) {
-        return CircleAvatar(
-          backgroundColor: Colors.transparent,
-          radius: 20,
-          backgroundImage: FileImage(file),
-        );
-      }
-    }
-
-    // Fallback to showing the first letter of username
+    // Only show the first letter of username
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 

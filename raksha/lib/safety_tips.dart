@@ -46,6 +46,8 @@ class VideoListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final primaryColor =
+        theme.primaryColor; // Use theme's primaryColor from AppThemes
 
     return Scaffold(
       appBar: AppBar(
@@ -56,9 +58,10 @@ class VideoListScreen extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
-        backgroundColor: isDark ? Colors.black : Colors.white,
-        foregroundColor: isDark ? Colors.white : theme.primaryColor,
-        elevation: 0,
+        // Use the appBarTheme defined in AppThemes
+        backgroundColor: theme.appBarTheme.backgroundColor,
+        foregroundColor: theme.appBarTheme.foregroundColor,
+        elevation: theme.appBarTheme.elevation,
       ),
       body: ListView.builder(
         itemCount: videos.length,
@@ -90,7 +93,7 @@ class VideoThumbnailCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final primaryColor = const Color(0xFF2196F3); // AppThemes.primaryBlue
+    final primaryColor = theme.primaryColor; // Use theme's primaryColor
 
     return Card(
       margin: EdgeInsets.all(10),
@@ -367,23 +370,24 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final backgroundColor =
-        isDark ? Colors.black : theme.scaffoldBackgroundColor;
-    final textColor = isDark ? Colors.white : theme.textTheme.bodyLarge?.color;
-    final primaryColor = const Color(0xFF2196F3); // AppThemes.primaryBlue
+        theme.scaffoldBackgroundColor; // Use theme's scaffoldBackgroundColor
+    final textColor = theme.textTheme.bodyLarge?.color;
+    final primaryColor = theme.primaryColor; // Use theme's primaryColor
 
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
         title: Text(
-          widget.title,
+          "Safety Tips",
           style: TextStyle(
             fontFamily: 'Poppy',
             fontWeight: FontWeight.w600,
           ),
         ),
-        backgroundColor: isDark ? Colors.black : Colors.white,
-        foregroundColor: isDark ? Colors.white : primaryColor,
-        elevation: 0,
+        // Use the appBarTheme defined in AppThemes
+        backgroundColor: theme.appBarTheme.backgroundColor,
+        foregroundColor: theme.appBarTheme.foregroundColor,
+        elevation: theme.appBarTheme.elevation,
       ),
       body: SafeArea(
         child: _buildContent(theme, textColor, primaryColor),

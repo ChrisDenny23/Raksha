@@ -112,7 +112,8 @@ class _EmergencyContactsSectionState extends State<EmergencyContactsSection> {
       barrierDismissible: false, // Prevent closing by tapping outside
       builder: (context) => AlertDialog(
         title: Text('Add Emergency Contact',
-            style: TextStyle(color: theme.textTheme.titleLarge?.color)),
+            style: TextStyle(
+                color: theme.textTheme.titleLarge?.color, fontFamily: 'poppy')),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -122,8 +123,9 @@ class _EmergencyContactsSectionState extends State<EmergencyContactsSection> {
                 decoration: InputDecoration(
                   labelText: 'Name',
                   hintText: 'Enter contact name',
-                  labelStyle:
-                      TextStyle(color: theme.textTheme.bodyLarge?.color),
+                  labelStyle: TextStyle(
+                      color: theme.textTheme.bodyLarge?.color,
+                      fontFamily: 'poppylight'),
                   hintStyle: TextStyle(
                       color:
                           theme.textTheme.bodyMedium?.color?.withOpacity(0.6)),
@@ -135,8 +137,9 @@ class _EmergencyContactsSectionState extends State<EmergencyContactsSection> {
                 decoration: InputDecoration(
                   labelText: 'Phone Number',
                   hintText: 'Enter phone number',
-                  labelStyle:
-                      TextStyle(color: theme.textTheme.bodyLarge?.color),
+                  labelStyle: TextStyle(
+                      color: theme.textTheme.bodyLarge?.color,
+                      fontFamily: 'poppylight'),
                   hintStyle: TextStyle(
                       color:
                           theme.textTheme.bodyMedium?.color?.withOpacity(0.6)),
@@ -149,8 +152,9 @@ class _EmergencyContactsSectionState extends State<EmergencyContactsSection> {
                 decoration: InputDecoration(
                   labelText: 'Relationship',
                   hintText: 'E.g., Family, Doctor, etc.',
-                  labelStyle:
-                      TextStyle(color: theme.textTheme.bodyLarge?.color),
+                  labelStyle: TextStyle(
+                      color: theme.textTheme.bodyLarge?.color,
+                      fontFamily: 'poppylight'),
                   hintStyle: TextStyle(
                       color:
                           theme.textTheme.bodyMedium?.color?.withOpacity(0.6)),
@@ -163,7 +167,9 @@ class _EmergencyContactsSectionState extends State<EmergencyContactsSection> {
           TextButton(
             onPressed: () =>
                 Navigator.of(context).pop(), // Explicitly pop the dialog
-            child: Text('Cancel', style: TextStyle(color: theme.primaryColor)),
+            child: Text('Cancel',
+                style:
+                    TextStyle(color: theme.primaryColor, fontFamily: 'poppy')),
           ),
           TextButton(
             onPressed: () async {
@@ -176,13 +182,18 @@ class _EmergencyContactsSectionState extends State<EmergencyContactsSection> {
                 // Show error but keep dialog open
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('Name and phone number are required'),
+                    content: Text(
+                      'Name and phone number are required',
+                      style: TextStyle(fontFamily: 'poppy'),
+                    ),
                     backgroundColor: theme.colorScheme.error,
                   ),
                 );
               }
             },
-            child: Text('Save', style: TextStyle(color: theme.primaryColor)),
+            child: Text('Save',
+                style:
+                    TextStyle(color: theme.primaryColor, fontFamily: 'poppy')),
           ),
         ],
       ),
@@ -259,10 +270,10 @@ class _EmergencyContactsSectionState extends State<EmergencyContactsSection> {
                       ? contact['name'][0].toUpperCase()
                       : '?',
                   style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: theme.primaryColor,
-                  ),
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: theme.primaryColor,
+                      fontFamily: 'poppy'),
                 ),
               ),
             ),
@@ -270,9 +281,9 @@ class _EmergencyContactsSectionState extends State<EmergencyContactsSection> {
             Text(
               contact['name'],
               style: TextStyle(
-                fontSize: 12,
-                color: theme.textTheme.bodyMedium?.color,
-              ),
+                  fontSize: 12,
+                  color: theme.textTheme.bodyMedium?.color,
+                  fontFamily: 'poppylight'),
               overflow: TextOverflow.ellipsis,
             ),
           ],
@@ -324,24 +335,32 @@ class _EmergencyContactsSectionState extends State<EmergencyContactsSection> {
           builder: (context) => AlertDialog(
             title: Text(
               'Confirm Delete',
-              style: TextStyle(color: theme.textTheme.titleLarge?.color),
+              style: TextStyle(
+                  color: theme.textTheme.titleLarge?.color,
+                  fontFamily: 'poppy'),
             ),
             content: Text(
               'Are you sure you want to delete ${contactToDelete['name']} from your emergency contacts?',
-              style: TextStyle(color: theme.textTheme.bodyLarge?.color),
+              style: TextStyle(
+                  color: theme.textTheme.bodyLarge?.color,
+                  fontFamily: 'poppylight'),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
-                child:
-                    Text('Cancel', style: TextStyle(color: theme.primaryColor)),
+                child: Text('Cancel',
+                    style: TextStyle(
+                        color: theme.primaryColor, fontFamily: 'poppy')),
               ),
               TextButton(
                 onPressed: () => Navigator.pop(context, true),
                 style: TextButton.styleFrom(
                   foregroundColor: theme.colorScheme.error,
                 ),
-                child: Text('Delete'),
+                child: Text(
+                  'Delete',
+                  style: TextStyle(fontFamily: 'poppy'),
+                ),
               ),
             ],
           ),

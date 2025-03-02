@@ -6,6 +6,7 @@ import 'package:raksha/homepage.dart';
 import 'package:raksha/mytextfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 // Global key to access the login form state
 final loginFormKey = GlobalKey<_LoginSignupModalState>();
@@ -230,6 +231,71 @@ class _LoginSignupModalState extends State<LoginSignupModal> {
     }
   }
 
+  // Sign in with Google
+  Future<void> signInWithGoogle() async {
+    // Show loading indicator
+    showDialog(
+      context: context,
+      builder: (context) => const Center(child: CircularProgressIndicator()),
+    );
+
+    try {
+      // Begin interactive sign-in process
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      // If user cancels the sign-in flow
+      if (googleUser == null) {
+        Navigator.pop(context); // Close loading dialog
+        return;
+      }
+
+      // Obtain auth details from the request
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      // Create a new credential
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      // Sign in to Firebase with the Google credential
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+
+      // Store user information in Firestore if it's a new user
+      if (userCredential.additionalUserInfo?.isNewUser ?? false) {
+        await FirebaseFirestore.instance
+            .collection("Users")
+            .doc(userCredential.user!.email)
+            .set({
+          'email': userCredential.user!.email,
+          'username': userCredential.user!.displayName ??
+              googleUser.displayName ??
+              'Google User',
+          'emailVerified': true,
+          'authProvider': 'google',
+          'photoURL': userCredential.user!.photoURL,
+        });
+      }
+
+      // Close loading dialog and navigate to home
+      if (mounted) {
+        Navigator.pop(context); // Close loading dialog
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      }
+    } catch (e) {
+      // Close loading dialog
+      if (mounted) Navigator.pop(context);
+      // Show error message
+      displayMessageToUser(
+          "Error signing in with Google: ${e.toString()}", context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -359,13 +425,7 @@ class _LoginSignupModalState extends State<LoginSignupModal> {
         ),
         SizedBox(height: _spacing),
         _buildSocialButton(
-          onPressed: () {},
-          text: "Login with Facebook",
-          icon: Icons.facebook,
-        ),
-        SizedBox(height: _spacing),
-        _buildSocialButton(
-          onPressed: () {},
+          onPressed: signInWithGoogle,
           text: "Login with Google",
           icon: FontAwesomeIcons.google,
           iconSize: _textFontSize,
@@ -418,13 +478,7 @@ class _LoginSignupModalState extends State<LoginSignupModal> {
         ),
         SizedBox(height: _spacing),
         _buildSocialButton(
-          onPressed: () {},
-          text: "Sign up with Facebook",
-          icon: Icons.facebook,
-        ),
-        SizedBox(height: _spacing),
-        _buildSocialButton(
-          onPressed: () {},
+          onPressed: signInWithGoogle,
           text: "Sign up with Google",
           icon: FontAwesomeIcons.google,
           iconSize: _textFontSize,

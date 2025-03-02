@@ -153,14 +153,21 @@ class _HelplinePageState extends State<HelplinePage> {
     // Get theme colors from your app's theme
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;
+    // ignore: unused_local_variable
     final bool isDarkMode = theme.brightness == Brightness.dark;
+    final primaryColor =
+        theme.primaryColor; // Use theme's primaryColor from AppThemes
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Indian Helpline Directory"),
-        backgroundColor: isDarkMode ? Colors.black : theme.secondaryHeaderColor,
-        foregroundColor: isDarkMode ? Colors.white : theme.primaryColor,
-        elevation: 0,
+        title: Text(
+          "Indian Helpline Directory",
+          style: TextStyle(fontFamily: 'poppy'),
+        ),
+        // Use the appBarTheme defined in AppThemes
+        backgroundColor: theme.appBarTheme.backgroundColor,
+        foregroundColor: theme.appBarTheme.foregroundColor,
+        elevation: theme.appBarTheme.elevation,
       ),
       body: Column(
         children: [
@@ -171,25 +178,22 @@ class _HelplinePageState extends State<HelplinePage> {
               controller: searchController,
               decoration: InputDecoration(
                 labelText: 'Search helplines',
-                labelStyle:
-                    TextStyle(color: colorScheme.primary.withOpacity(0.8)),
-                suffixIcon: Icon(Icons.search, color: colorScheme.primary),
+                labelStyle: TextStyle(color: primaryColor.withOpacity(0.8)),
+                suffixIcon: Icon(Icons.search, color: primaryColor),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
-                  borderSide: BorderSide(color: colorScheme.primary),
+                  borderSide: BorderSide(color: primaryColor),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
-                  borderSide:
-                      BorderSide(color: colorScheme.primary, width: 2.0),
+                  borderSide: BorderSide(color: primaryColor, width: 2.0),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
-                  borderSide:
-                      BorderSide(color: colorScheme.primary.withOpacity(0.5)),
+                  borderSide: BorderSide(color: primaryColor.withOpacity(0.5)),
                 ),
               ),
-              cursorColor: colorScheme.primary,
+              cursorColor: primaryColor,
               onChanged: (value) {
                 setState(() {});
               },
@@ -209,7 +213,7 @@ class _HelplinePageState extends State<HelplinePage> {
                     label: Text(category),
                     selected: selectedCategory == category,
                     selectedColor: colorScheme.primaryContainer,
-                    checkmarkColor: colorScheme.primary,
+                    checkmarkColor: primaryColor,
                     labelStyle: TextStyle(
                       color: selectedCategory == category
                           ? colorScheme.onPrimaryContainer
@@ -259,7 +263,8 @@ class _HelplinePageState extends State<HelplinePage> {
                     categoryColor = Colors.deepOrange;
                     break;
                   default:
-                    categoryColor = colorScheme.secondary;
+                    categoryColor =
+                        primaryColor; // Use theme's primaryColor for default
                 }
 
                 return Card(

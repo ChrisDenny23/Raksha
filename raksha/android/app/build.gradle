@@ -5,14 +5,16 @@ plugins {
 }
 
 android {
-    namespace "com.example.raksha"  // ✅ Corrected syntax
-    compileSdk 34  // Explicitly defined
+    namespace "com.example.raksha"
+    compileSdk 34
 
-    ndkVersion "25.1.8937393"  // Set to match your NDK version
+    ndkVersion "25.1.8937393"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+        // Enable core library desugaring
+        coreLibraryDesugaringEnabled true
     }
 
     kotlinOptions {
@@ -22,7 +24,7 @@ android {
     defaultConfig {
         applicationId "com.example.raksha"
         minSdk 23
-        targetSdk 34  // Explicitly defined
+        targetSdk 34
         versionCode 1
         versionName "1.0"
     }
@@ -32,6 +34,11 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+}
+
+dependencies {
+    // Add this line for desugaring - corrected syntax
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:1.1.5"
 }
 
 flutter {
