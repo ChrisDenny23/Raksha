@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
           // Localization configuration
 
           debugShowCheckedModeBanner: false,
-          home: HomePage(),
+          home: GetStartedPage(),
           // Define named routes
           routes: {
             '/login': (context) => Scaffold(
